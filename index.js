@@ -1,7 +1,23 @@
 
+var Promise = require('bluebird');
 var express = require('express');
 var bodyParser = require('body-parser');
 var mongodb = require('mongodb').MongoClient;
+var fork = require('child_process').spawn;
+var path = require('path');
+
+var Worker = function(data) {
+    return new Promise(function(resolve) {
+        var child = fork('python3', [
+            path.join(__dirname, 'analyze/worker.py'),
+            data
+        ]);
+
+        child.stdout.on('data', function(data) {
+            resolve(data);
+        });
+    });
+};
 
 var User;
 
@@ -67,6 +83,16 @@ app.post('/data', function(req, res, next) {
         .catch(function() {
             res.status(500).send('Nope');
         });
+});
+
+// Perform analysis on 2 seconds of data.
+app.post('/analyze', function(req, res, next) {
+    // Data encoded as string in request
+    var dataString = req.body.dataString;
+
+    Worker(dataString).then(function(result) {
+        res.status(200).send(result);
+    });
 });
 
 app.listen(process.env.MLTA_PORT, function() {
