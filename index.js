@@ -37,7 +37,7 @@ mongodb.connect(
 );
 
 var app = express();
-app.use(bodyParser.urlencoded({ extended: true, }));
+app.use(bodyParser.json());
 
 // Let client know we're live
 app.get('/ping', function(req, res, next) {
