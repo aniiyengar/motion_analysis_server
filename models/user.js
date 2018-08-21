@@ -59,13 +59,7 @@ module.exports = function(connection) {
         return new Promise(function(resolve, reject) {
             this.get(username, password)
                 .then(function(user) {
-                    var currentData;
-                    if (user.data === 'undefined') {
-                        currentData = [];
-                    }
-                    else {
-                        currentData = JSON.parse(user.data);
-                    }
+                    var currentData = user.data;
                     currentData.push(dataset);
                     collection.updateOne(
                         { username: username },
