@@ -129,8 +129,6 @@ app.post('/analyze', function(req, res, next) {
     // Data encoded as string in request
     var dataString = req.body.dataString;
 
-    console.log(req.body.dataString);
-
     Worker(dataString).then(function(result) {
         res
             .status(200)

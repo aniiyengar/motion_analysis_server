@@ -43,7 +43,8 @@ module.exports = function(connection) {
         return new Promise(function(resolve, reject) {
             collection.insertOne({
                 username: username,
-                password: hash
+                password: hash,
+                data: [],
             }, function(err, result) {
                 if (err !== null) {
                     reject();
@@ -58,7 +59,13 @@ module.exports = function(connection) {
         return new Promise(function(resolve, reject) {
             this.get(username, password)
                 .then(function(user) {
-                    var currentData = JSON.parse(user.data);
+                    var currentData;
+                    if (user.data === 'undefined') {
+                        currentData = [];
+                    }
+                    else {
+                        currentData = JSON.parse(user.data);
+                    }
                     currentData.push(dataset);
                     collection.updateOne(
                         { username: username },
