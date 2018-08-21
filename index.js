@@ -103,12 +103,24 @@ app.post('/data', function(req, res, next) {
         dataString: dataString
     });
 
+    console.log(newData);
+
     User.updateData(username, password, newData)
         .then(function() {
-            res.status(200).send('OK');
+            User.get(username, password)
+                .then(function(user) {
+                    res.status(200).json(user);
+                })
+                .catch(function() {
+                    res.status(500).json({
+                        error: 'Invalid credentials...??',
+                    });
+                });
         })
         .catch(function() {
-            res.status(500).send('Nope');
+            res.status(500).send({
+                error: 'There was a problem updating the data.'
+            });
         });
 });
 

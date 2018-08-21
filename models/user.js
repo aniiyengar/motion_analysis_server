@@ -65,6 +65,7 @@ module.exports = function(connection) {
                         { $set: { data: JSON.stringify(currentData) } },
                         function(err, result) {
                             if (err !== null) {
+                                console.log(err);
                                 reject();
                             } else {
                                 resolve(result);
