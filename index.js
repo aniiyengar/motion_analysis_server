@@ -98,7 +98,12 @@ app.post('/data', function(req, res, next) {
     var username = req.body.username;
     var password = req.body.password;
 
-    User.updateData(username, password, dataString)
+    var newData = JSON.stringify({
+        timestamp: ts,
+        dataString: dataString
+    });
+
+    User.updateData(username, password, newData)
         .then(function() {
             res.status(200).send('OK');
         })
