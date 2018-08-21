@@ -62,7 +62,9 @@ app.get('/login', function(req, res, next) {
             res.status(200).json(user);
         })
         .catch(function() {
-            res.status(500).json('There was an issue.');
+            res.status(500).json({
+                error: 'Invalid credentials.',
+            });
         });
 });
 
@@ -70,11 +72,13 @@ app.get('/login', function(req, res, next) {
 app.post('/signup', function(req, res, next) {
     // Password in request body as plaintext.
     User.create(req.body.username, req.body.password)
-        .then(function() {
-            res.status(200).send('OK');
+        .then(function(user) {
+            res.status(200).json(user);
         })
         .catch(function() {
-            res.status(500).send('Nope');
+            res.status(500).json({
+                error: 'There was a problem creating the user.'
+            });
         });
 });
 
