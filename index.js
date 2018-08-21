@@ -23,7 +23,7 @@ var Worker = function(data) {
         child.stdout.on('data', function(data) {
             resolve(data);
         });
-    });
+    })
 };
 
 var User;
@@ -53,8 +53,10 @@ app.get('/ping', function(req, res, next) {
 
 // Run analysis on string batch
 app.get('/login', function(req, res, next) {
-    // The password will be in the request body.
-    User.get(req.body.username, req.body.password)
+    // The username will be a url param
+    // The password will be in the Auth Basic header
+    var password = req.get('Authorization').split('Basic').trim();
+    User.get(req.query.username, password)
         .then(function(user) {
             res.status(200).json(user);
         })
