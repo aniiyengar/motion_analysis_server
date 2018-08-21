@@ -73,7 +73,15 @@ app.post('/signup', function(req, res, next) {
     // Password in request body as plaintext.
     User.create(req.body.username, req.body.password)
         .then(function(user) {
-            res.status(200).json(user);
+            User.get(req.body.username, req.body.password)
+                .then(function(user) {
+                    res.status(200).json(user);
+                })
+                .catch(function() {
+                    res.status(500).json({
+                        error: 'Invalid credentials...??',
+                    });
+                });
         })
         .catch(function() {
             res.status(500).json({
