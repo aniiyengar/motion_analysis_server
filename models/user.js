@@ -46,9 +46,9 @@ module.exports = function(connection) {
                 password: hash
             }, function(err, result) {
                 if (err !== null) {
-                    reject(result);
+                    reject();
                 } else {
-                    resolve(result);
+                    resolve();
                 }
             });
         });

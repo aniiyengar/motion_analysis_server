@@ -72,7 +72,7 @@ app.get('/login', function(req, res, next) {
 app.post('/signup', function(req, res, next) {
     // Password in request body as plaintext.
     User.create(req.body.username, req.body.password)
-        .then(function(user) {
+        .then(function() {
             User.get(req.body.username, req.body.password)
                 .then(function(user) {
                     res.status(200).json(user);
