@@ -55,7 +55,8 @@ app.get('/ping', function(req, res, next) {
 app.get('/login', function(req, res, next) {
     // The username will be a url param
     // The password will be in the Auth Basic header
-    var password = req.get('Authorization').split('Basic').trim();
+    console.log(req.get('Authorization').split('Basic')[1].trim());
+    var password = req.get('Authorization').split('Basic')[1].trim();
     User.get(req.query.username, password)
         .then(function(user) {
             res.status(200).json(user);
