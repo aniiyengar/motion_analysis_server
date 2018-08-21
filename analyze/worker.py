@@ -1,3 +1,5 @@
+#!/bin/bash
+"exec" "`dirname $0`/venv/bin/python3" "$0" "$@"
 
 from json import dumps as D, loads as L
 import numpy as np
@@ -90,25 +92,13 @@ def _analyze(raw):
         'z': _process_data_one_dimension(zs)
     }
 
-# Mimics the lambda API
-
-def _construct_response(status, body):
-    return {
-        'statusCode': str(status),
-        'headers': {
-            'Content-Type': 'application/json'
-        },
-        'isBase64Encoded': False,
-        'body': D(body)
-    }
-
 def handler(data):
     status, result = 200, {
         'type': 'process_result',
         'data': _analyze(data)
     }
 
-    return _construct_response(status, result)
+    return D(result)
 
 result = handler(sys.argv[1])
 print(result)

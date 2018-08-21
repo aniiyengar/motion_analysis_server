@@ -7,11 +7,18 @@ var fork = require('child_process').spawn;
 var path = require('path');
 
 var Worker = function(data) {
-    return new Promise(function(resolve) {
-        var child = fork('python3', [
-            path.join(__dirname, 'analyze/worker.py'),
-            data
-        ]);
+    return new Promise(function(resolve, reject) {
+        var child = fork(
+            path.join(__dirname, 'analyze/venv/bin/python3'),
+            [
+                path.join(__dirname, 'analyze/worker.py'),
+                data
+            ]
+        );
+
+        child.stderr.on('data', function(data) {
+            reject(data);
+        });
 
         child.stdout.on('data', function(data) {
             resolve(data);
@@ -90,8 +97,20 @@ app.post('/analyze', function(req, res, next) {
     // Data encoded as string in request
     var dataString = req.body.dataString;
 
+    console.log(req.body.dataString);
+
     Worker(dataString).then(function(result) {
-        res.status(200).send(result);
+        res
+            .status(200)
+            .setHeader('Content-Type', 'application/json');
+
+        res.send(result);
+    }).catch(function(err) {
+        res
+            .status(500)
+            .setHeader('Content-Type', 'text/plain');
+
+        res.send(err);
     });
 });
 
